@@ -127,10 +127,10 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--gray
 /* ── Main ── */
 #main{flex:1;overflow:hidden;display:flex;flex-direction:column;min-width:0}
 .view{display:none;flex-direction:column;height:100%;overflow:hidden}
-.view.active{display:flex}
+.view.active{display:flex;height:100%;overflow:hidden}
 
 /* Feature detail */
-#view-feature{padding:18px 22px;overflow-y:auto}
+#view-feature{overflow-y:auto;padding:18px 22px}
 .feat-header{margin-bottom:16px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
 .feat-title-wrap{flex:1}
 .feat-path{font-size:13px;color:var(--gray-400);margin-bottom:4px;font-family:'JetBrains Mono',monospace}
@@ -174,7 +174,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--gray
 .btn-s:hover{background:var(--gray-100);border-color:var(--gray-300)}
 
 /* ── Schedule View ── */
-#view-schedule{display:flex;flex-direction:column;height:100%;overflow:hidden}
+#view-schedule{display:flex;flex-direction:column;overflow:hidden}
 .sch-topbar{padding:14px 22px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--gray-200);background:var(--white);flex-shrink:0}
 .sch-title{font-size:18px;font-weight:700;color:var(--gray-800)}
 .sch-legend{display:flex;gap:12px;margin-left:auto}
