@@ -626,6 +626,10 @@ function selectNode(id){
   renderTags();renderMkup();renderAC();
 }
 function getPath(id){const p=[];let c=id;while(c){p.unshift(c);c=(nodes[c] ? nodes[c].parentId : null);}return p;}
+function getProjectName(){
+  const el=document.getElementById('proj-current-name');
+  return (el&&el.textContent)||'SysMap';
+}
 function saveField(f,v){
   if(!currentId)return;
   nodes[currentId][f]=f==='progress'?parseInt(v):v;
@@ -1325,7 +1329,7 @@ function initFb(cfg){
   try{
     try{firebase.apps.forEach(a=>a.delete());}catch(e){}
     firebase.initializeApp(cfg);const db=firebase.database();
-    const key=(document.getElementById('project-name').value||'default').replace(/[^a-zA-Z0-9_\-]/g,'_');
+    const key=(getProjectName()||'default').replace(/[^a-zA-Z0-9_\-]/g,'_');
     fbRef=db.ref('sysmap/'+key);setSyncStatus('saving','連接中...');
     fbRef.on('value',snap=>{
       const data=snap.val();
@@ -1339,7 +1343,7 @@ function initFb(cfg){
   }catch(e){console.error(e);showToast('連接失敗：'+e.message,'err');setSyncStatus('err','未連接');}
 }
 function disconnectFb(){if(fbRef)fbRef.off();try{firebase.apps.forEach(a=>a.delete());}catch(e){}fbRef=null;fbConnected=false;localStorage.removeItem('sysmap_fb');setSyncStatus('ok','本機');showToast('已中斷');}
-function setSyncStatus(t,txt){const b=document.getElementById('sync-badge'),l=document.getElementById('sync-label');b.className='sync-badge sy-'+t;l.textContent=txt;}
+function setSyncStatus(t,txt){const b=document.getElementById('sync-badge'),l=document.getElementById('sync-label');if(b)b.className='sync-badge sy-'+t;if(l)l.textContent=txt;}
 
 // ═══════════════════════════════════════════════════════════════
 // PERSISTENCE
@@ -1535,6 +1539,7 @@ window.addEventListener('resize',()=>{
 });
 
 // Auto-connect Firebase
+function autoConnectFb(){
 const savedFbCfg=loadFbCfg();
 if(savedFbCfg){
   document.getElementById('fb-apiKey').value=savedFbCfg.apiKey||'';
@@ -1546,6 +1551,8 @@ if(savedFbCfg){
   setTimeout(()=>initFb(savedFbCfg),400);
   document.getElementById('fb-banner').classList.add('hidden');
 }
+}
+autoConnectFb();
 
 // Schedule tab click
 document.getElementById('tab-schedule').addEventListener('click',()=>renderGantt());
