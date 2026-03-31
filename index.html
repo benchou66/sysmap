@@ -335,6 +335,12 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--gray
             <input class="feat-title" id="feat-title" placeholder="功能名稱" oninput="saveField('name',this.value)">
             <div class="feat-meta">
               <button class="sbadge" id="feat-status-btn" onclick="cycleStatus()">待開發</button>
+              <select class="msel" id="feat-type" onchange="saveField('type',this.value);renderTree();renderMindMap()">
+                <option value="module">📦 模組</option>
+                <option value="feature">⚙️ 功能</option>
+                <option value="page">🖼 頁面</option>
+                <option value="api">🔌 API</option>
+              </select>
               <select class="msel" id="feat-priority" onchange="saveField('priority',this.value)">
                 <option value="high">🔴 高</option><option value="mid" selected>🟡 中</option><option value="low">🟢 低</option>
               </select>
@@ -552,6 +558,7 @@ function selectNode(id){
   document.getElementById('feat-detail').style.display='block';
   document.getElementById('feat-path').textContent=getPath(id).map(i=>(nodes[i] ? nodes[i].name : '')).join(' › ');
   document.getElementById('feat-title').value=n.name;
+  document.getElementById('feat-type').value=n.type||'feature';
   setSBadge(n.status);
   document.getElementById('feat-priority').value=n.priority||'mid';
   document.getElementById('feat-owner').value=n.owner||'';
