@@ -1,0 +1,43 @@
+# 建立資料夾
+mkdir sysmap && cd sysmap
+
+# 把 index.html 放進這個資料夾後執行
+git init
+git add index.html
+git commit -m "init"
+
+# 連接 GitHub（把「你的帳號」換成你的 GitHub username）
+git remote add origin https://github.com/你的帳號/sysmap.git
+git branch -M main
+git push -u origin main
+```
+
+### Step 6 — 開啟 GitHub Pages
+
+1. 前往你的 repo 頁面 → 點上方 **Settings**
+2. 左側選單 → **Pages**
+3. Source 選「**Deploy from a branch**」
+4. Branch 選 `main`，資料夾選 `/ (root)`
+5. 點 **Save**
+6. 等約 **1 分鐘**，頁面出現你的網址：
+```
+https://你的帳號.github.io/sysmap/
+```
+
+---
+
+## Part 3：連接 Firebase（在網站上操作）
+
+### Step 7 — 填入 Firebase 設定
+
+1. 開啟你剛才的 GitHub Pages 網址
+2. 點右上角 **🔥 圖示**
+3. 把 Step 2 複製的 `firebaseConfig` 各欄位填入：
+```
+apiKey:            AIzaSy...
+authDomain:        sysmap.firebaseapp.com
+databaseURL:       https://sysmap-default-rtdb.asia-southeast1.firebasedatabase.app
+projectId:         sysmap
+storageBucket:     sysmap.appspot.com
+messagingSenderId: 123456789
+appId:             1:123:web:abc...
