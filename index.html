@@ -311,21 +311,29 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--gray
 <div id="fb-banner">
   <div style="font-size:24px;flex-shrink:0;margin-top:2px">🔥</div>
   <div style="flex:1">
-    <div style="font-weight:600;font-size:15px;margin-bottom:2px">連接 Firebase Realtime Database</div>
-    <div style="font-size:13px;color:rgba(255,255,255,.45);margin-bottom:6px">填入設定後跨裝置即時同步，未設定則使用本機 localStorage</div>
-    <div class="fb-grid">
-      <input class="fbi" id="fb-apiKey" placeholder="apiKey: AIza...">
-      <input class="fbi" id="fb-authDomain" placeholder="authDomain: xxx.firebaseapp.com">
-      <input class="fbi" id="fb-databaseURL" placeholder="databaseURL: https://xxx-rtdb.firebaseio.com">
-      <input class="fbi" id="fb-projectId" placeholder="projectId: my-project">
-      <input class="fbi" id="fb-storageBucket" placeholder="storageBucket: xxx.appspot.com">
-      <input class="fbi" id="fb-appId" placeholder="appId: 1:123:web:abc...">
+    <div style="font-weight:600;font-size:15px;margin-bottom:4px">連接 Firebase Realtime Database</div>
+    <div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:10px">上傳 <code style="background:rgba(255,255,255,.15);padding:1px 6px;border-radius:4px;font-size:12px">firebase-config.json</code> 檔案即可連接，設定值不會寫入程式碼</div>
+    <!-- File drop zone -->
+    <div id="fb-dropzone" onclick="document.getElementById('fb-file-inp').click()"
+      style="border:2px dashed rgba(255,255,255,.3);border-radius:10px;padding:18px 24px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:10px"
+      ondragover="event.preventDefault();this.style.borderColor='#14b8a6';this.style.background='rgba(20,184,166,.1)'"
+      ondragleave="this.style.borderColor='rgba(255,255,255,.3)';this.style.background=''"
+      ondrop="event.preventDefault();this.style.borderColor='rgba(255,255,255,.3)';this.style.background='';handleFbFileDrop(event)">
+      <div style="font-size:28px;margin-bottom:6px">📄</div>
+      <div style="font-size:14px;font-weight:500;color:white">點擊或拖拉 firebase-config.json</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.45);margin-top:3px">檔案只在本機讀取，不會上傳到任何地方</div>
     </div>
-    <div style="display:flex;gap:7px;margin-top:8px;align-items:center">
-      <button class="btn-fbcon" onclick="connectFb()">🔥 連接</button>
+    <input type="file" id="fb-file-inp" accept=".json,application/json" style="display:none" onchange="handleFbFileSelect(event)">
+    <!-- Status / loaded config preview -->
+    <div id="fb-file-status" style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:8px;min-height:18px"></div>
+    <div style="display:flex;gap:7px;align-items:center">
       <button class="btn-skip" onclick="document.getElementById('fb-banner').classList.add('hidden')">稍後</button>
-      <button class="btn-skip" style="margin-left:auto;font-size:13px;padding:3px 8px" onclick="disconnectFb()">清除</button>
+      <button class="btn-skip" style="margin-left:auto;font-size:12px;padding:3px 10px" onclick="disconnectFb()">清除連接</button>
     </div>
+    <!-- Hidden inputs kept for compatibility -->
+    <input type="hidden" id="fb-apiKey"><input type="hidden" id="fb-authDomain">
+    <input type="hidden" id="fb-databaseURL"><input type="hidden" id="fb-projectId">
+    <input type="hidden" id="fb-storageBucket"><input type="hidden" id="fb-appId">
   </div>
 </div>
 
@@ -516,16 +524,7 @@ let currentProjId=null;   // active project id
 let nodes={},rootIds=[],currentId=null,addParentId=null,expandState={};
 let fbRef=null,fbConnected=false,saveTimer=null;
 
-// ── 硬編碼 Firebase 設定（換電腦也自動連接）──────────────────────
-const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyBRGLJA9nbnijZ8sYtyaS7Z6WVi6zXPI6s",
-  authDomain: "sysmap-b2879.firebaseapp.com",
-  databaseURL: "https://sysmap-b2879-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "sysmap-b2879",
-  storageBucket: "sysmap-b2879.firebasestorage.app",
-  messagingSenderId: "342577114084",
-  appId: "1:342577114084:web:520e9975dede447c82f5f1"
-};
+const FIREBASE_CONFIG = null; // 由 JSON 檔案載入
 
 
 
@@ -1328,6 +1327,50 @@ function exportPPTX(){
   finally{btn.disabled=false;btn.textContent='⬇ PPT';}
 }
 
+
+// ═══════════════════════════════════════════════════════════════
+// FIREBASE CONFIG FILE UPLOAD
+// ═══════════════════════════════════════════════════════════════
+function handleFbFileDrop(e){
+  const file = e.dataTransfer.files[0];
+  if(file) readFbConfigFile(file);
+}
+function handleFbFileSelect(e){
+  const file = e.target.files[0];
+  if(file) readFbConfigFile(file);
+  e.target.value=''; // reset so same file can be re-selected
+}
+function readFbConfigFile(file){
+  if(!file.name.endsWith('.json') && file.type !== 'application/json'){
+    showToast('請選擇 .json 格式的檔案','err'); return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      let cfg = JSON.parse(e.target.result);
+      // Support both raw config object and { firebaseConfig: {...} } wrapper
+      if(cfg.firebaseConfig) cfg = cfg.firebaseConfig;
+      // Validate required fields
+      if(!cfg.apiKey || !cfg.databaseURL){
+        showToast('JSON 缺少必要欄位：apiKey 或 databaseURL','err'); return;
+      }
+      // Show status
+      const status = document.getElementById('fb-file-status');
+      if(status) status.textContent = '✓ 已讀取：' + file.name + ' (projectId: ' + (cfg.projectId||'?') + ')';
+      // Save to localStorage for next visit
+      localStorage.setItem('sysmap_fb', JSON.stringify(cfg));
+      // Connect
+      initFb(cfg);
+      // Hide banner after short delay
+      setTimeout(()=>{
+        document.getElementById('fb-banner').classList.add('hidden');
+      }, 800);
+    }catch(err){
+      showToast('JSON 格式錯誤：' + err.message, 'err');
+    }
+  };
+  reader.readAsText(file);
+}
 // ═══════════════════════════════════════════════════════════════
 // FIREBASE
 // ═══════════════════════════════════════════════════════════════
@@ -1556,18 +1599,11 @@ window.addEventListener('resize',()=>{
 
 // Auto-connect Firebase
 function autoConnectFb(){
-  // 優先使用硬編碼設定，直接靜默連接
-  const cfg = FIREBASE_CONFIG.apiKey ? FIREBASE_CONFIG : loadFbCfg();
-  if(cfg && cfg.apiKey){
-    // 預填表單（方便使用者看到設定值）
-    const fill = (id, val) => { const el=document.getElementById(id); if(el) el.value=val||''; };
-    fill('fb-apiKey', cfg.apiKey);
-    fill('fb-authDomain', cfg.authDomain);
-    fill('fb-databaseURL', cfg.databaseURL);
-    fill('fb-projectId', cfg.projectId);
-    fill('fb-storageBucket', cfg.storageBucket);
-    fill('fb-appId', cfg.appId);
-    // 靜默連接，不顯示 banner
+  // 從 localStorage 讀取上次儲存的設定
+  const cfg = loadFbCfg();
+  if(cfg && cfg.apiKey && cfg.databaseURL){
+    const status = document.getElementById('fb-file-status');
+    if(status) status.textContent = '✓ 已連接（使用上次儲存的設定）';
     document.getElementById('fb-banner').classList.add('hidden');
     setTimeout(()=>initFb(cfg), 300);
   }
