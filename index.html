@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
@@ -34,95 +35,124 @@ if(!CanvasRenderingContext2D.prototype.roundRect){CanvasRenderingContext2D.proto
 body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--gray-800);height:100vh;display:flex;flex-direction:column;font-size:16px;overflow:hidden}
 
 /* ── Topbar ── */
-#topbar{background:var(--navy);color:white;display:flex;align-items:center;padding:0 14px;height:50px;flex-shrink:0;gap:9px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+#topbar{background:var(–navy);color:white;display:flex;align-items:center;padding:0 14px;height:50px;flex-shrink:0;gap:9px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3)}
 .logo{font-weight:700;font-size:17px;color:white;display:flex;align-items:center;gap:6px;flex-shrink:0;letter-spacing:.3px}
-.logo-accent{color:var(--teal-light)}
-.proj-input{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:6px;color:white;padding:4px 9px;font-size:15px;font-family:'Noto Sans TC',sans-serif;width:150px}
+.logo-accent{color:var(–teal-light)}
+.proj-input{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:6px;color:white;padding:4px 9px;font-size:15px;font-family:‘Noto Sans TC’,sans-serif;width:150px}
 .proj-input::placeholder{color:rgba(255,255,255,.35)}
-.proj-input:focus{outline:none;border-color:var(--teal-light);background:rgba(255,255,255,.15)}
+.proj-input:focus{outline:none;border-color:var(–teal-light);background:rgba(255,255,255,.15)}
 .nav-tabs{display:flex;gap:1px}
-.ntab{padding:5px 11px;border-radius:6px;cursor:pointer;font-size:14px;color:rgba(255,255,255,.65);transition:all .15s;border:none;background:none;font-family:'Noto Sans TC',sans-serif;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.ntab{padding:5px 11px;border-radius:6px;cursor:pointer;font-size:14px;color:rgba(255,255,255,.65);transition:all .15s;border:none;background:none;font-family:‘Noto Sans TC’,sans-serif;display:flex;align-items:center;gap:4px;white-space:nowrap}
 .ntab:hover{background:rgba(255,255,255,.1);color:white}
 .ntab.active{background:rgba(255,255,255,.16);color:white;font-weight:500}
 .tr{margin-left:auto;display:flex;align-items:center;gap:6px}
 .sync-badge{font-size:13px;padding:2px 7px;border-radius:12px;display:flex;align-items:center;gap:3px;flex-shrink:0}
-.sy-ok{background:rgba(20,184,166,.2);color:var(--teal-light)}
+.sy-ok{background:rgba(20,184,166,.2);color:var(–teal-light)}
 .sy-saving{background:rgba(255,255,255,.09);color:rgba(255,255,255,.55)}
 .sy-err{background:rgba(220,38,38,.2);color:#fca5a5}
 .sy-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
 .sy-saving .sy-dot{animation:blink 1s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
 
-
-
 .bexp:disabled{opacity:.45;cursor:not-allowed}
+
+/* ── Project Switcher ── */
+.proj-switcher{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:8px;color:white;padding:5px 12px;font-size:14px;font-family:‘Noto Sans TC’,sans-serif;cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .15s;max-width:200px}
+.proj-switcher:hover{background:rgba(255,255,255,.2)}
+#proj-current-name{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:150px}
+.proj-arrow{font-size:11px;opacity:.7;flex-shrink:0}
+
+/* ── Project Panel ── */
+#proj-overlay{position:fixed;inset:0;z-index:200;display:none}
+#proj-overlay:not(.hidden){display:block}
+#proj-panel{position:fixed;top:50px;left:50%;transform:translateX(-50%);width:360px;max-width:92vw;background:white;border-radius:14px;box-shadow:0 8px 40px rgba(0,0,0,.18);z-index:201;overflow:hidden;display:none}
+#proj-panel:not(.hidden){display:flex;flex-direction:column}
+.pp-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 12px;border-bottom:1px solid var(–gray-200);background:var(–navy)}
+.pp-title{font-size:14px;font-weight:700;color:white}
+.pp-close{background:none;border:none;color:rgba(255,255,255,.7);font-size:18px;cursor:pointer;line-height:1;padding:0 2px}
+.pp-close:hover{color:white}
+#pp-list{max-height:320px;overflow-y:auto;padding:8px}
+.pp-item{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:9px;cursor:pointer;transition:background .12s;border:1px solid transparent}
+.pp-item:hover{background:var(–gray-50);border-color:var(–gray-200)}
+.pp-item.active{background:#e8f0fe;border-color:#c7d7fc}
+.pp-item-icon{width:32px;height:32px;border-radius:8px;background:var(–navy);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;color:white}
+.pp-item.active .pp-item-icon{background:var(–teal)}
+.pp-item-info{flex:1;min-width:0}
+.pp-item-name{font-size:14px;font-weight:600;color:var(–gray-800);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pp-item-meta{font-size:11px;color:var(–gray-400);margin-top:1px}
+.pp-item-acts{display:flex;gap:3px;opacity:0;transition:opacity .1s}
+.pp-item:hover .pp-item-acts{opacity:1}
+.pp-act-btn{width:24px;height:24px;border-radius:5px;border:none;background:none;cursor:pointer;font-size:13px;color:var(–gray-400);display:flex;align-items:center;justify-content:center;transition:all .1s}
+.pp-act-btn:hover{background:var(–gray-200);color:var(–gray-700)}
+.pp-act-btn.del:hover{background:var(–red-faint);color:var(–red)}
+.pp-footer{padding:10px;border-top:1px solid var(–gray-100);display:flex;gap:7px;background:var(–gray-50)}
+.pp-new-inp{flex:1;padding:7px 10px;border:1px solid var(–gray-200);border-radius:8px;font-family:‘Noto Sans TC’,sans-serif;font-size:13px;outline:none;color:var(–gray-800)}
+.pp-new-inp:focus{border-color:var(–teal)}
+.pp-new-btn{padding:7px 14px;background:var(–navy);color:white;border:none;border-radius:8px;font-family:‘Noto Sans TC’,sans-serif;font-size:13px;cursor:pointer;font-weight:500;white-space:nowrap}
+.pp-new-btn:hover{background:var(–navy-mid)}
+.pp-empty{padding:24px;text-align:center;color:var(–gray-400);font-size:13px}
 .bico{width:28px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:rgba(255,255,255,.75);transition:all .15s;flex-shrink:0}
 .bico:hover{background:rgba(255,255,255,.14)}
 
 /* ── Firebase Banner ── */
-#fb-banner{background:linear-gradient(135deg,var(--navy-mid),var(--navy));color:white;padding:16px 22px;display:flex;align-items:flex-start;gap:16px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.07)}
+#fb-banner{background:linear-gradient(135deg,var(–navy-mid),var(–navy));color:white;padding:16px 22px;display:flex;align-items:flex-start;gap:16px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.07)}
 #fb-banner.hidden{display:none}
 .fb-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px;max-width:620px}
-.fbi{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.15);border-radius:6px;color:white;padding:5px 9px;font-size:13px;font-family:'JetBrains Mono',monospace;width:100%}
+.fbi{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.15);border-radius:6px;color:white;padding:5px 9px;font-size:13px;font-family:‘JetBrains Mono’,monospace;width:100%}
 .fbi::placeholder{color:rgba(255,255,255,.28);font-size:12.5px}
-.fbi:focus{outline:none;border-color:var(--teal-light)}
-.btn-fbcon{padding:5px 13px;background:var(--teal);color:white;border:none;border-radius:6px;font-family:'Noto Sans TC',sans-serif;font-size:14px;cursor:pointer;font-weight:500}
-.btn-fbcon:hover{background:var(--teal-light)}
-.btn-skip{padding:5px 10px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.15);border-radius:6px;font-family:'Noto Sans TC',sans-serif;font-size:14px;cursor:pointer}
+.fbi:focus{outline:none;border-color:var(–teal-light)}
+.btn-fbcon{padding:5px 13px;background:var(–teal);color:white;border:none;border-radius:6px;font-family:‘Noto Sans TC’,sans-serif;font-size:14px;cursor:pointer;font-weight:500}
+.btn-fbcon:hover{background:var(–teal-light)}
+.btn-skip{padding:5px 10px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.15);border-radius:6px;font-family:‘Noto Sans TC’,sans-serif;font-size:14px;cursor:pointer}
 .btn-skip:hover{background:rgba(255,255,255,.12)}
-
-
-
-
-
 
 /* ── App shell ── */
 #app{display:flex;flex:1;overflow:hidden;min-height:0}
 
 /* ── Sidebar ── */
-#sidebar{width:280px;min-width:180px;max-width:calc(100vw - 8px);flex-shrink:0;background:var(--white);border-right:1px solid var(--gray-200);display:flex;flex-direction:column;overflow:hidden;position:relative}
+#sidebar{width:280px;min-width:180px;max-width:calc(100vw - 8px);flex-shrink:0;background:var(–white);border-right:1px solid var(–gray-200);display:flex;flex-direction:column;overflow:hidden;position:relative}
 #resizer{width:5px;background:transparent;cursor:col-resize;flex-shrink:0;position:relative;transition:background .15s;z-index:10}
-#resizer:hover,#resizer.dragging{background:var(--teal)}
-#resizer::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:1px;height:40px;background:var(--gray-300);border-radius:2px}
-#resizer:hover::after,#resizer.dragging::after{background:var(--teal)}
+#resizer:hover,#resizer.dragging{background:var(–teal)}
+#resizer::after{content:’’;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:1px;height:40px;background:var(–gray-300);border-radius:2px}
+#resizer:hover::after,#resizer.dragging::after{background:var(–teal)}
 
 /* sidebar tabs */
-.sb-tabs{display:flex;border-bottom:1px solid var(--gray-200);background:var(--gray-50)}
-.sb-tab{flex:1;padding:8px 4px;font-size:14px;font-weight:500;color:var(--gray-500);cursor:pointer;border:none;background:none;font-family:'Noto Sans TC',sans-serif;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:4px;border-bottom:2px solid transparent}
-.sb-tab:hover{color:var(--gray-700);background:var(--gray-100)}
-.sb-tab.active{color:var(--navy);border-bottom-color:var(--teal);background:var(--white)}
-.sb-head{padding:9px 12px 7px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.sb-title{font-size:13px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px}
+.sb-tabs{display:flex;border-bottom:1px solid var(–gray-200);background:var(–gray-50)}
+.sb-tab{flex:1;padding:8px 4px;font-size:14px;font-weight:500;color:var(–gray-500);cursor:pointer;border:none;background:none;font-family:‘Noto Sans TC’,sans-serif;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:4px;border-bottom:2px solid transparent}
+.sb-tab:hover{color:var(–gray-700);background:var(–gray-100)}
+.sb-tab.active{color:var(–navy);border-bottom-color:var(–teal);background:var(–white)}
+.sb-head{padding:9px 12px 7px;border-bottom:1px solid var(–gray-200);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.sb-title{font-size:13px;font-weight:600;color:var(–gray-500);text-transform:uppercase;letter-spacing:.5px}
 .sb-panel{flex:1;overflow:hidden;display:none;flex-direction:column}
 .sb-panel.active{display:flex}
 
 /* Tree */
 #feature-tree{flex:1;overflow-y:auto;padding:5px}
 .tree-node{user-select:none}
-.tree-row{display:flex;align-items:center;gap:3px;padding:4px 7px 4px 0;border-radius:var(--r);cursor:pointer;transition:background .1s}
-.tree-row:hover{background:var(--gray-100)}
+.tree-row{display:flex;align-items:center;gap:3px;padding:4px 7px 4px 0;border-radius:var(–r);cursor:pointer;transition:background .1s}
+.tree-row:hover{background:var(–gray-100)}
 .tree-row.selected{background:#e8f0fe}
-.tree-row.selected .tree-label{color:var(--navy);font-weight:500}
-.tree-toggle{width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--gray-400);flex-shrink:0;transition:transform .15s}
+.tree-row.selected .tree-label{color:var(–navy);font-weight:500}
+.tree-toggle{width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(–gray-400);flex-shrink:0;transition:transform .15s}
 .tree-toggle.open{transform:rotate(90deg)}
 .tree-icon{font-size:15px;flex-shrink:0}
-.tree-label{font-size:14.5px;color:var(--gray-700);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tree-label{font-size:14.5px;color:var(–gray-700);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tree-status{width:5px;height:5px;border-radius:50%;flex-shrink:0}
-.st-done{background:var(--green)}.st-wip{background:var(--amber)}.st-todo{background:var(--gray-300)}
+.st-done{background:var(–green)}.st-wip{background:var(–amber)}.st-todo{background:var(–gray-300)}
 .tree-children{padding-left:16px}
 .tree-acts{display:none;gap:1px}
 .tree-row:hover .tree-acts{display:flex}
-.tact{width:18px;height:18px;border-radius:3px;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--gray-400);transition:all .1s}
-.tact:hover{background:var(--gray-200);color:var(--gray-700)}
+.tact{width:18px;height:18px;border-radius:3px;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(–gray-400);transition:all .1s}
+.tact:hover{background:var(–gray-200);color:var(–gray-700)}
 
 /* Mind Map Canvas */
-#mindmap-wrap{flex:1;overflow:hidden;position:relative;background:var(--gray-50)}
+#mindmap-wrap{flex:1;overflow:hidden;position:relative;background:var(–gray-50)}
 #mindmap-canvas{width:100%;height:100%;cursor:grab;display:block}
 #mindmap-canvas.grabbing{cursor:grabbing}
-.mm-toolbar{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px;background:white;border:1px solid var(--gray-200);border-radius:20px;padding:4px 8px;box-shadow:var(--sh)}
-.mm-btn{padding:3px 9px;border-radius:14px;border:none;background:none;font-size:14px;cursor:pointer;color:var(--gray-600);font-family:'Noto Sans TC',sans-serif;transition:all .15s;display:flex;align-items:center;gap:3px}
-.mm-btn:hover{background:var(--gray-100);color:var(--gray-800)}
-.mm-tip{position:absolute;top:8px;left:8px;font-size:13px;color:var(--gray-400);pointer-events:none}
+.mm-toolbar{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px;background:white;border:1px solid var(–gray-200);border-radius:20px;padding:4px 8px;box-shadow:var(–sh)}
+.mm-btn{padding:3px 9px;border-radius:14px;border:none;background:none;font-size:14px;cursor:pointer;color:var(–gray-600);font-family:‘Noto Sans TC’,sans-serif;transition:all .15s;display:flex;align-items:center;gap:3px}
+.mm-btn:hover{background:var(–gray-100);color:var(–gray-800)}
+.mm-tip{position:absolute;top:8px;left:8px;font-size:13px;color:var(–gray-400);pointer-events:none}
 
 /* ── Main ── */
 #main{flex:1;overflow:hidden;display:flex;flex-direction:column;min-width:0;height:100%}
@@ -133,77 +163,77 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--gray
 #view-feature{overflow:hidden}#view-feature-inner{flex:1;min-height:0;overflow-y:auto;padding:18px 22px}
 .feat-header{margin-bottom:16px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
 .feat-title-wrap{flex:1}
-.feat-path{font-size:13px;color:var(--gray-400);margin-bottom:4px;font-family:'JetBrains Mono',monospace}
-.feat-title{font-size:21px;font-weight:700;color:var(--gray-800);border:none;background:transparent;width:100%;font-family:'Noto Sans TC',sans-serif;line-height:1.3}
-.feat-title:focus{outline:none;border-bottom:2px solid var(--teal)}
+.feat-path{font-size:13px;color:var(–gray-400);margin-bottom:4px;font-family:‘JetBrains Mono’,monospace}
+.feat-title{font-size:21px;font-weight:700;color:var(–gray-800);border:none;background:transparent;width:100%;font-family:‘Noto Sans TC’,sans-serif;line-height:1.3}
+.feat-title:focus{outline:none;border-bottom:2px solid var(–teal)}
 .feat-meta{display:flex;gap:8px;margin-top:7px;flex-wrap:wrap}
-.msel{padding:3px 9px;border-radius:20px;border:1px solid var(--gray-200);background:var(--white);font-size:14px;font-family:'Noto Sans TC',sans-serif;cursor:pointer;color:var(--gray-700)}
+.msel{padding:3px 9px;border-radius:20px;border:1px solid var(–gray-200);background:var(–white);font-size:14px;font-family:‘Noto Sans TC’,sans-serif;cursor:pointer;color:var(–gray-700)}
 .sbadge{padding:3px 11px;border-radius:20px;font-size:14px;font-weight:500;border:none;cursor:pointer}
-.bd-todo{background:var(--gray-100);color:var(--gray-600)}
-.bd-wip{background:var(--amber-faint);color:#92400e}
-.bd-done{background:var(--green-faint);color:#14532d}
-.scard{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--rlg);margin-bottom:12px;overflow:hidden}
-.scard-head{padding:9px 12px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--gray-100);background:var(--gray-50)}
-.scard-head h3{font-size:14.5px;font-weight:600;color:var(--gray-700);flex:1}
+.bd-todo{background:var(–gray-100);color:var(–gray-600)}
+.bd-wip{background:var(–amber-faint);color:#92400e}
+.bd-done{background:var(–green-faint);color:#14532d}
+.scard{background:var(–white);border:1px solid var(–gray-200);border-radius:var(–rlg);margin-bottom:12px;overflow:hidden}
+.scard-head{padding:9px 12px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(–gray-100);background:var(–gray-50)}
+.scard-head h3{font-size:14.5px;font-weight:600;color:var(–gray-700);flex:1}
 .scard-body{padding:12px}
-.fdesc{width:100%;min-height:95px;border:none;font-family:'Noto Sans TC',sans-serif;font-size:15.5px;color:var(--gray-700);line-height:1.7;resize:vertical;outline:none;background:transparent}
-.fdesc::placeholder{color:var(--gray-300)}
-.dinput{padding:6px 9px;border:1px solid var(--gray-200);border-radius:var(--r);font-family:'Noto Sans TC',sans-serif;font-size:15px;color:var(--gray-700);outline:none}
-.dinput:focus{border-color:var(--teal)}
-.tag{padding:2px 9px;border-radius:20px;font-size:13.5px;background:var(--gray-100);color:var(--gray-600);cursor:pointer;border:1px solid var(--gray-200);display:flex;align-items:center;gap:3px}
-.tag-inp{padding:2px 9px;border-radius:20px;font-size:13.5px;border:1px dashed var(--teal);background:var(--teal-faint);color:var(--teal);outline:none;width:80px;font-family:'Noto Sans TC',sans-serif}
+.fdesc{width:100%;min-height:95px;border:none;font-family:‘Noto Sans TC’,sans-serif;font-size:15.5px;color:var(–gray-700);line-height:1.7;resize:vertical;outline:none;background:transparent}
+.fdesc::placeholder{color:var(–gray-300)}
+.dinput{padding:6px 9px;border:1px solid var(–gray-200);border-radius:var(–r);font-family:‘Noto Sans TC’,sans-serif;font-size:15px;color:var(–gray-700);outline:none}
+.dinput:focus{border-color:var(–teal)}
+.tag{padding:2px 9px;border-radius:20px;font-size:13.5px;background:var(–gray-100);color:var(–gray-600);cursor:pointer;border:1px solid var(–gray-200);display:flex;align-items:center;gap:3px}
+.tag-inp{padding:2px 9px;border-radius:20px;font-size:13.5px;border:1px dashed var(–teal);background:var(–teal-faint);color:var(–teal);outline:none;width:80px;font-family:‘Noto Sans TC’,sans-serif}
 .tag-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
 .mkup-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:8px}
-.mkup-card{border:1.5px dashed var(--gray-200);border-radius:var(--rlg);padding:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;transition:all .15s;background:var(--gray-50);min-height:100px;position:relative}
-.mkup-card:hover{border-color:var(--teal);background:var(--teal-faint)}
-.mkup-card.has-img{border-style:solid;border-color:var(--gray-200);background:var(--white)}
+.mkup-card{border:1.5px dashed var(–gray-200);border-radius:var(–rlg);padding:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;transition:all .15s;background:var(–gray-50);min-height:100px;position:relative}
+.mkup-card:hover{border-color:var(–teal);background:var(–teal-faint)}
+.mkup-card.has-img{border-style:solid;border-color:var(–gray-200);background:var(–white)}
 .mkup-card img{width:100%;height:100px;object-fit:cover;border-radius:5px}
-.mkup-lbl{font-size:13px;color:var(--gray-500);text-align:center}
-.mkup-del{position:absolute;top:4px;right:4px;width:18px;height:18px;background:var(--red-faint);border-radius:50%;border:none;cursor:pointer;color:var(--red);font-size:14px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .1s}
+.mkup-lbl{font-size:13px;color:var(–gray-500);text-align:center}
+.mkup-del{position:absolute;top:4px;right:4px;width:18px;height:18px;background:var(–red-faint);border-radius:50%;border:none;cursor:pointer;color:var(–red);font-size:14px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .1s}
 .mkup-card:hover .mkup-del{opacity:1}
-.add-mkup{border:1.5px dashed var(--teal);color:var(--teal);border-radius:var(--rlg);padding:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;background:var(--teal-faint);min-height:100px;font-size:14px;font-family:'Noto Sans TC',sans-serif;transition:all .15s}
+.add-mkup{border:1.5px dashed var(–teal);color:var(–teal);border-radius:var(–rlg);padding:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;background:var(–teal-faint);min-height:100px;font-size:14px;font-family:‘Noto Sans TC’,sans-serif;transition:all .15s}
 .add-mkup:hover{background:#ccfbf1}
-.empty-state{flex:1;min-height:400px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--gray-400);gap:9px}
-.empty-icon{font-size:42px}.empty-text{font-size:15px;color:var(--gray-500)}
-.empty-sub{font-size:14px;color:var(--gray-400);text-align:center;max-width:240px;line-height:1.6}
+.empty-state{flex:1;min-height:400px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(–gray-400);gap:9px}
+.empty-icon{font-size:42px}.empty-text{font-size:15px;color:var(–gray-500)}
+.empty-sub{font-size:14px;color:var(–gray-400);text-align:center;max-width:240px;line-height:1.6}
 
 /* Buttons */
-.btn-p{padding:6px 12px;background:var(--navy);color:white;border:none;border-radius:var(--r);font-family:'Noto Sans TC',sans-serif;font-size:14.5px;cursor:pointer;font-weight:500;transition:background .15s;display:flex;align-items:center;gap:4px}
-.btn-p:hover{background:var(--navy-mid)}
-.btn-s{padding:5px 10px;background:var(--white);color:var(--gray-700);border:1px solid var(--gray-200);border-radius:var(--r);font-family:'Noto Sans TC',sans-serif;font-size:14.5px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:4px}
-.btn-s:hover{background:var(--gray-100);border-color:var(--gray-300)}
+.btn-p{padding:6px 12px;background:var(–navy);color:white;border:none;border-radius:var(–r);font-family:‘Noto Sans TC’,sans-serif;font-size:14.5px;cursor:pointer;font-weight:500;transition:background .15s;display:flex;align-items:center;gap:4px}
+.btn-p:hover{background:var(–navy-mid)}
+.btn-s{padding:5px 10px;background:var(–white);color:var(–gray-700);border:1px solid var(–gray-200);border-radius:var(–r);font-family:‘Noto Sans TC’,sans-serif;font-size:14.5px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:4px}
+.btn-s:hover{background:var(–gray-100);border-color:var(–gray-300)}
 
 /* ── Schedule View ── */
 #view-schedule{overflow:hidden}
-.sch-topbar{padding:14px 22px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--gray-200);background:var(--white);flex-shrink:0}
-.sch-title{font-size:18px;font-weight:700;color:var(--gray-800)}
+.sch-topbar{padding:14px 22px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(–gray-200);background:var(–white);flex-shrink:0}
+.sch-title{font-size:18px;font-weight:700;color:var(–gray-800)}
 .sch-legend{display:flex;gap:12px;margin-left:auto}
-.leg-item{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--gray-500)}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:13px;color:var(–gray-500)}
 .leg-dot{width:10px;height:10px;border-radius:2px}
 .sch-body{flex:1;min-height:0;overflow-y:auto;padding:14px 22px}
 .prog-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
-.prog-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--rlg);padding:12px}
+.prog-card{background:var(–white);border:1px solid var(–gray-200);border-radius:var(–rlg);padding:12px}
 .prog-num{font-size:24px;font-weight:700}
-.prog-lbl{font-size:13px;color:var(--gray-500);margin-top:1px}
+.prog-lbl{font-size:13px;color:var(–gray-500);margin-top:1px}
 
 /* Gantt */
-.gantt-container{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--rlg);overflow:hidden}
-.gantt-header{display:grid;background:var(--navy);color:white;font-size:13.5px;font-weight:600}
-.gantt-row{display:grid;border-bottom:1px solid var(--gray-100);transition:background .1s;cursor:pointer}
-.gantt-row:hover{background:var(--gray-50)}
+.gantt-container{background:var(–white);border:1px solid var(–gray-200);border-radius:var(–rlg);overflow:hidden}
+.gantt-header{display:grid;background:var(–navy);color:white;font-size:13.5px;font-weight:600}
+.gantt-row{display:grid;border-bottom:1px solid var(–gray-100);transition:background .1s;cursor:pointer}
+.gantt-row:hover{background:var(–gray-50)}
 .gantt-row.selected{background:#e8f0fe}
 .gantt-cell{padding:7px 10px;display:flex;align-items:center;font-size:14.5px;overflow:hidden}
 .gantt-chart-cell{padding:6px 10px;display:flex;align-items:center;overflow:hidden}
-.gantt-bar-wrap{position:relative;height:22px;background:var(--gray-100);border-radius:4px;overflow:hidden;flex:1;min-width:60px}
+.gantt-bar-wrap{position:relative;height:22px;background:var(–gray-100);border-radius:4px;overflow:hidden;flex:1;min-width:60px}
 .gantt-bar{height:100%;border-radius:4px;transition:width .4s;display:flex;align-items:center;justify-content:flex-end;padding-right:5px}
 .gantt-bar span{font-size:12px;font-weight:600;color:rgba(255,255,255,.9)}
 .bar-done{background:linear-gradient(90deg,#16a34a,#4ade80)}
 .bar-wip{background:linear-gradient(90deg,#d97706,#fbbf24)}
-.bar-todo{background:var(--gray-300)}
+.bar-todo{background:var(–gray-300)}
 .gantt-dates{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none}
 
 /* Timeline chart above gantt */
-.timeline-chart{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--rlg);margin-bottom:12px;overflow:hidden}
+.timeline-chart{background:var(–white);border:1px solid var(–gray-200);border-radius:var(–rlg);margin-bottom:12px;overflow:hidden}
 #timeline-canvas{display:block;width:100%}
 
 /* Mini badge */
@@ -212,36 +242,41 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--gray
 /* ── Modal ── */
 .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.38);display:none;align-items:center;justify-content:center;z-index:999}
 .modal-ov.open{display:flex}
-.modal{background:var(--white);border-radius:var(--rlg);padding:20px;width:390px;max-width:90vw;box-shadow:var(--shmd)}
-.modal h2{font-size:16px;font-weight:700;color:var(--gray-800);margin-bottom:12px}
-.modal-inp{width:100%;padding:7px 9px;border:1px solid var(--gray-200);border-radius:var(--r);font-family:'Noto Sans TC',sans-serif;font-size:15px;color:var(--gray-800);outline:none;margin-bottom:9px}
-.modal-inp:focus{border-color:var(--teal)}
-.modal-sel{width:100%;padding:7px 9px;border:1px solid var(--gray-200);border-radius:var(--r);font-family:'Noto Sans TC',sans-serif;font-size:15px;color:var(--gray-800);outline:none;margin-bottom:12px;background:var(--white)}
+.modal{background:var(–white);border-radius:var(–rlg);padding:20px;width:390px;max-width:90vw;box-shadow:var(–shmd)}
+.modal h2{font-size:16px;font-weight:700;color:var(–gray-800);margin-bottom:12px}
+.modal-inp{width:100%;padding:7px 9px;border:1px solid var(–gray-200);border-radius:var(–r);font-family:‘Noto Sans TC’,sans-serif;font-size:15px;color:var(–gray-800);outline:none;margin-bottom:9px}
+.modal-inp:focus{border-color:var(–teal)}
+.modal-sel{width:100%;padding:7px 9px;border:1px solid var(–gray-200);border-radius:var(–r);font-family:‘Noto Sans TC’,sans-serif;font-size:15px;color:var(–gray-800);outline:none;margin-bottom:12px;background:var(–white)}
 .modal-acts{display:flex;gap:7px;justify-content:flex-end}
 
 /* ── Mind Map edit tooltip ── */
-#mm-edit-box{position:fixed;background:white;border:1px solid var(--gray-200);border-radius:var(--rlg);padding:12px;box-shadow:var(--shmd);z-index:200;min-width:220px;display:none}
+#mm-edit-box{position:fixed;background:white;border:1px solid var(–gray-200);border-radius:var(–rlg);padding:12px;box-shadow:var(–shmd);z-index:200;min-width:220px;display:none}
 #mm-edit-box.open{display:block}
-#mm-edit-input{width:100%;padding:6px 8px;border:1px solid var(--gray-200);border-radius:var(--r);font-family:'Noto Sans TC',sans-serif;font-size:15px;outline:none;margin-bottom:8px}
-#mm-edit-input:focus{border-color:var(--teal)}
+#mm-edit-input{width:100%;padding:6px 8px;border:1px solid var(–gray-200);border-radius:var(–r);font-family:‘Noto Sans TC’,sans-serif;font-size:15px;outline:none;margin-bottom:8px}
+#mm-edit-input:focus{border-color:var(–teal)}
 .mm-edit-acts{display:flex;gap:6px;flex-wrap:wrap}
 
 /* Toast */
-#toast{position:fixed;bottom:18px;right:18px;padding:9px 15px;border-radius:var(--r);background:var(--navy);color:white;font-size:14.5px;z-index:9999;opacity:0;transform:translateY(7px);transition:all .3s;pointer-events:none;max-width:320px;white-space:pre-line;line-height:1.5}
+#toast{position:fixed;bottom:18px;right:18px;padding:9px 15px;border-radius:var(–r);background:var(–navy);color:white;font-size:14.5px;z-index:9999;opacity:0;transform:translateY(7px);transition:all .3s;pointer-events:none;max-width:320px;white-space:pre-line;line-height:1.5}
 #toast.show{opacity:1;transform:translateY(0)}
 
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--gray-200);border-radius:10px}
-::-webkit-scrollbar-thumb:hover{background:var(--gray-300)}
+::-webkit-scrollbar-thumb{background:var(–gray-200);border-radius:10px}
+::-webkit-scrollbar-thumb:hover{background:var(–gray-300)}
 </style>
+
 </head>
 <body>
 
 <!-- Topbar -->
+
 <div id="topbar">
   <div class="logo">SysMap <span class="logo-accent">✦</span></div>
-  <input class="proj-input" id="project-name" placeholder="專案名稱" value="新系統">
+  <button class="proj-switcher" id="proj-switcher-btn" onclick="toggleProjPanel()">
+    <span id="proj-current-name">新系統</span>
+    <span class="proj-arrow">▾</span>
+  </button>
   <div class="nav-tabs">
     <button class="ntab active" onclick="switchTab('feature')" id="tab-feature">🗂 功能</button>
     <button class="ntab" onclick="switchTab('schedule')" id="tab-schedule">📅 時程</button>
@@ -254,7 +289,23 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--gray
   </div>
 </div>
 
+<!-- Project Panel -->
+
+<div id="proj-panel" class="hidden">
+  <div class="pp-head">
+    <span class="pp-title">專案管理</span>
+    <button class="pp-close" onclick="toggleProjPanel()">✕</button>
+  </div>
+  <div id="pp-list"></div>
+  <div class="pp-footer">
+    <input class="pp-new-inp" id="pp-new-inp" placeholder="新專案名稱..." onkeydown="if(event.key==='Enter')createProject()">
+    <button class="pp-new-btn" onclick="createProject()">＋ 新增</button>
+  </div>
+</div>
+<div id="proj-overlay" class="hidden" onclick="toggleProjPanel()"></div>
+
 <!-- Firebase Banner -->
+
 <div id="fb-banner">
   <div style="font-size:24px;flex-shrink:0;margin-top:2px">🔥</div>
   <div style="flex:1">
@@ -276,9 +327,8 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--gray
   </div>
 </div>
 
-
-
 <!-- App -->
+
 <div id="app">
   <!-- Sidebar -->
   <div id="sidebar">
@@ -287,37 +337,42 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--gray
       <button class="sb-tab" onclick="setSbTab('mind')" id="sbtab-mind">🧠 心智圖</button>
     </div>
 
-    <!-- Tree panel -->
-    <div class="sb-panel active" id="sbpanel-tree">
-      <div class="sb-head">
-        <span class="sb-title">功能清單</span>
-        <div style="display:flex;gap:3px">
-          <button class="tact" style="width:22px;height:22px" title="展開全部" onclick="expandAll()">⊞</button>
-          <button class="tact" style="width:22px;height:22px" title="新增功能" onclick="openAddModal(null)">＋</button>
-        </div>
-      </div>
-      <div id="feature-tree"></div>
+```
+<!-- Tree panel -->
+<div class="sb-panel active" id="sbpanel-tree">
+  <div class="sb-head">
+    <span class="sb-title">功能清單</span>
+    <div style="display:flex;gap:3px">
+      <button class="tact" style="width:22px;height:22px" title="展開全部" onclick="expandAll()">⊞</button>
+      <button class="tact" style="width:22px;height:22px" title="新增功能" onclick="openAddModal(null)">＋</button>
     </div>
+  </div>
+  <div id="feature-tree"></div>
+</div>
 
-    <!-- Mind Map panel -->
-    <div class="sb-panel" id="sbpanel-mind">
-      <div id="mindmap-wrap">
-        <canvas id="mindmap-canvas"></canvas>
-        <div class="mm-tip">雙擊節點編輯 · 拖拉移動 · 右鍵選單</div>
-        <div class="mm-toolbar">
-          <button class="mm-btn" onclick="mmZoom(1.2)">＋</button>
-          <button class="mm-btn" onclick="mmZoom(0.83)">－</button>
-          <button class="mm-btn" onclick="mmFit()">⊡ 適應</button>
-          <button class="mm-btn" onclick="mmAutoLayout()">⟳ 排列</button>
-        </div>
-      </div>
+<!-- Mind Map panel -->
+<div class="sb-panel" id="sbpanel-mind">
+  <div id="mindmap-wrap">
+    <canvas id="mindmap-canvas"></canvas>
+    <div class="mm-tip">雙擊節點編輯 · 拖拉移動 · 右鍵選單</div>
+    <div class="mm-toolbar">
+      <button class="mm-btn" onclick="mmZoom(1.2)">＋</button>
+      <button class="mm-btn" onclick="mmZoom(0.83)">－</button>
+      <button class="mm-btn" onclick="mmFit()">⊡ 適應</button>
+      <button class="mm-btn" onclick="mmAutoLayout()">⟳ 排列</button>
     </div>
+  </div>
+</div>
+```
+
   </div>
 
   <!-- Resizer -->
+
   <div id="resizer"></div>
 
   <!-- Main -->
+
   <div id="main">
     <!-- Feature View -->
     <div class="view active" id="view-feature">
@@ -356,77 +411,81 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--gray
           </div>
         </div>
 
-        <div class="scard">
-          <div class="scard-head"><span>📝</span><h3>功能說明</h3></div>
-          <div class="scard-body">
-            <textarea class="fdesc" id="feat-desc" placeholder="描述功能目的、行為、商業邏輯..." oninput="saveField('desc',this.value)"></textarea>
-            <div style="border-top:1px solid var(--gray-100);padding-top:6px;margin-top:7px">
-              <div style="font-size:13px;color:var(--gray-400);margin-bottom:4px">標籤</div>
-              <div class="tag-row" id="feat-tags"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="scard">
-          <div class="scard-head"><span>🗓</span><h3>時程規劃</h3></div>
-          <div class="scard-body">
-            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-              <div style="display:flex;flex-direction:column;gap:2px"><label style="font-size:13px;color:var(--gray-400)">開始</label><input type="date" class="dinput" id="feat-start" onchange="saveField('start',this.value)"></div>
-              <div style="color:var(--gray-300);align-self:flex-end;padding-bottom:8px">→</div>
-              <div style="display:flex;flex-direction:column;gap:2px"><label style="font-size:13px;color:var(--gray-400)">結束</label><input type="date" class="dinput" id="feat-end" onchange="saveField('end',this.value)"></div>
-              <div style="display:flex;flex-direction:column;gap:2px;margin-left:4px">
-                <label style="font-size:13px;color:var(--gray-400)">完成度</label>
-                <div style="display:flex;align-items:center;gap:6px"><input type="range" min="0" max="100" id="feat-progress" oninput="updateProgress(this.value)" style="width:80px"><span id="feat-pct" style="font-size:14.5px;font-weight:600;color:var(--navy);min-width:28px">0%</span></div>
-              </div>
-            </div>
-            <div style="margin-top:8px"><div style="font-size:13px;color:var(--gray-400);margin-bottom:3px">里程碑</div><textarea style="width:100%;border:1px solid var(--gray-200);border-radius:var(--r);padding:6px 8px;font-family:'Noto Sans TC',sans-serif;font-size:14.5px;resize:vertical;min-height:48px;outline:none;color:var(--gray-700)" id="feat-milestone" placeholder="例：v1 預計 3/31 上線" oninput="saveField('milestone',this.value)"></textarea></div>
-          </div>
-        </div>
-
-        <div class="scard">
-          <div class="scard-head"><span>🖼</span><h3>畫面截圖</h3></div>
-          <div class="scard-body">
-            <div class="mkup-grid" id="mkup-grid"></div>
-            <input type="file" id="img-inp" accept="image/*" multiple style="display:none" onchange="handleImgUpload(event)">
-            <div style="margin-top:8px"><div style="font-size:13px;color:var(--gray-400);margin-bottom:3px">畫面說明</div><textarea style="width:100%;border:1px solid var(--gray-200);border-radius:var(--r);padding:6px 8px;font-family:'Noto Sans TC',sans-serif;font-size:14.5px;resize:vertical;min-height:60px;outline:none;color:var(--gray-700)" id="feat-screennote" placeholder="互動細節、特殊狀態..." oninput="saveField('screennote',this.value)"></textarea></div>
-          </div>
-        </div>
-
-        <div class="scard">
-          <div class="scard-head"><span>✅</span><h3>驗收條件 (AC)</h3></div>
-          <div class="scard-body">
-            <div id="ac-list" style="margin-bottom:7px"></div>
-            <div style="display:flex;gap:6px"><input style="flex:1;border:1px solid var(--gray-200);border-radius:var(--r);padding:6px 8px;font-family:'Noto Sans TC',sans-serif;font-size:14.5px;outline:none;color:var(--gray-700)" id="ac-inp" placeholder="新增驗收條件，按 Enter" onkeydown="addAC(event)"><button class="btn-s" onclick="addAC({key:'Enter'})">＋</button></div>
-          </div>
+```
+    <div class="scard">
+      <div class="scard-head"><span>📝</span><h3>功能說明</h3></div>
+      <div class="scard-body">
+        <textarea class="fdesc" id="feat-desc" placeholder="描述功能目的、行為、商業邏輯..." oninput="saveField('desc',this.value)"></textarea>
+        <div style="border-top:1px solid var(--gray-100);padding-top:6px;margin-top:7px">
+          <div style="font-size:13px;color:var(--gray-400);margin-bottom:4px">標籤</div>
+          <div class="tag-row" id="feat-tags"></div>
         </div>
       </div>
     </div>
-      </div>
 
-    <!-- Schedule View -->
-    <div class="view" id="view-schedule">
-      <div class="sch-topbar">
-        <span class="sch-title">📅 時程總覽</span>
-        <div class="sch-legend">
-          <div class="leg-item"><div class="leg-dot" style="background:var(--green)"></div>已完成</div>
-          <div class="leg-item"><div class="leg-dot" style="background:var(--amber)"></div>開發中</div>
-          <div class="leg-item"><div class="leg-dot" style="background:var(--gray-300)"></div>待開發</div>
+    <div class="scard">
+      <div class="scard-head"><span>🗓</span><h3>時程規劃</h3></div>
+      <div class="scard-body">
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:2px"><label style="font-size:13px;color:var(--gray-400)">開始</label><input type="date" class="dinput" id="feat-start" onchange="saveField('start',this.value)"></div>
+          <div style="color:var(--gray-300);align-self:flex-end;padding-bottom:8px">→</div>
+          <div style="display:flex;flex-direction:column;gap:2px"><label style="font-size:13px;color:var(--gray-400)">結束</label><input type="date" class="dinput" id="feat-end" onchange="saveField('end',this.value)"></div>
+          <div style="display:flex;flex-direction:column;gap:2px;margin-left:4px">
+            <label style="font-size:13px;color:var(--gray-400)">完成度</label>
+            <div style="display:flex;align-items:center;gap:6px"><input type="range" min="0" max="100" id="feat-progress" oninput="updateProgress(this.value)" style="width:80px"><span id="feat-pct" style="font-size:14.5px;font-weight:600;color:var(--navy);min-width:28px">0%</span></div>
+          </div>
         </div>
+        <div style="margin-top:8px"><div style="font-size:13px;color:var(--gray-400);margin-bottom:3px">里程碑</div><textarea style="width:100%;border:1px solid var(--gray-200);border-radius:var(--r);padding:6px 8px;font-family:'Noto Sans TC',sans-serif;font-size:14.5px;resize:vertical;min-height:48px;outline:none;color:var(--gray-700)" id="feat-milestone" placeholder="例：v1 預計 3/31 上線" oninput="saveField('milestone',this.value)"></textarea></div>
       </div>
-      <div class="sch-body">
-        <div class="prog-grid" id="prog-grid"></div>
-        <!-- Timeline Bar Chart -->
-        <div class="timeline-chart" id="timeline-chart-wrap">
-          <canvas id="timeline-canvas" height="160"></canvas>
-        </div>
-        <!-- Gantt Table -->
-        <div class="gantt-container" id="gantt-wrap"></div>
+    </div>
+
+    <div class="scard">
+      <div class="scard-head"><span>🖼</span><h3>畫面截圖</h3></div>
+      <div class="scard-body">
+        <div class="mkup-grid" id="mkup-grid"></div>
+        <input type="file" id="img-inp" accept="image/*" multiple style="display:none" onchange="handleImgUpload(event)">
+        <div style="margin-top:8px"><div style="font-size:13px;color:var(--gray-400);margin-bottom:3px">畫面說明</div><textarea style="width:100%;border:1px solid var(--gray-200);border-radius:var(--r);padding:6px 8px;font-family:'Noto Sans TC',sans-serif;font-size:14.5px;resize:vertical;min-height:60px;outline:none;color:var(--gray-700)" id="feat-screennote" placeholder="互動細節、特殊狀態..." oninput="saveField('screennote',this.value)"></textarea></div>
+      </div>
+    </div>
+
+    <div class="scard">
+      <div class="scard-head"><span>✅</span><h3>驗收條件 (AC)</h3></div>
+      <div class="scard-body">
+        <div id="ac-list" style="margin-bottom:7px"></div>
+        <div style="display:flex;gap:6px"><input style="flex:1;border:1px solid var(--gray-200);border-radius:var(--r);padding:6px 8px;font-family:'Noto Sans TC',sans-serif;font-size:14.5px;outline:none;color:var(--gray-700)" id="ac-inp" placeholder="新增驗收條件，按 Enter" onkeydown="addAC(event)"><button class="btn-s" onclick="addAC({key:'Enter'})">＋</button></div>
       </div>
     </div>
   </div>
 </div>
+  </div>
+
+<!-- Schedule View -->
+<div class="view" id="view-schedule">
+  <div class="sch-topbar">
+    <span class="sch-title">📅 時程總覽</span>
+    <div class="sch-legend">
+      <div class="leg-item"><div class="leg-dot" style="background:var(--green)"></div>已完成</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--amber)"></div>開發中</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--gray-300)"></div>待開發</div>
+    </div>
+  </div>
+  <div class="sch-body">
+    <div class="prog-grid" id="prog-grid"></div>
+    <!-- Timeline Bar Chart -->
+    <div class="timeline-chart" id="timeline-chart-wrap">
+      <canvas id="timeline-canvas" height="160"></canvas>
+    </div>
+    <!-- Gantt Table -->
+    <div class="gantt-container" id="gantt-wrap"></div>
+  </div>
+</div>
+```
+
+  </div>
+</div>
 
 <!-- Add Node Modal -->
+
 <div class="modal-ov" id="add-modal">
   <div class="modal">
     <h2>新增功能節點</h2>
@@ -443,6 +502,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--gray
 </div>
 
 <!-- Mind Map edit box -->
+
 <div id="mm-edit-box">
   <input id="mm-edit-input" placeholder="節點名稱">
   <div class="mm-edit-acts">
@@ -459,6 +519,10 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--gray
 // ═══════════════════════════════════════════════════════════════
 // DATA MODEL
 // ═══════════════════════════════════════════════════════════════
+// ─── Multi-project globals ───────────────────────────────────
+let projects={};          // { pid: {id,name,createdAt} }
+let currentProjId=null;   // active project id
+
 let nodes={},rootIds=[],currentId=null,addParentId=null,expandState={};
 let fbRef=null,fbConnected=false,saveTimer=null;
 
@@ -1083,7 +1147,7 @@ function exportXLSX(){
   const btn=document.getElementById('btn-xlsx');btn.disabled=true;btn.textContent='⏳...';
   try{
     const items=getAllItemsFlat();
-    const projName=document.getElementById('project-name').value||'SysMap';
+    const projName=(currentProjId&&projects[currentProjId]?projects[currentProjId].name:'')||'SysMap';
     const WB=XLSX.utils.book_new();
 
     // Sheet 1: 功能清單
@@ -1149,7 +1213,7 @@ function exportPPTX(){
   const btn=document.getElementById('btn-pptx');btn.disabled=true;btn.textContent='⏳...';
   try{
     const items=getAllItemsFlat();
-    const projName=document.getElementById('project-name').value||'SysMap';
+    const projName=(currentProjId&&projects[currentProjId]?projects[currentProjId].name:'')||'SysMap';
     const pres=new PptxGenJS();
     pres.layout='LAYOUT_16x9';pres.title=projName;
 
@@ -1292,20 +1356,160 @@ function setSyncStatus(t,txt){const b=document.getElementById('sync-badge'),l=do
 // ═══════════════════════════════════════════════════════════════
 function scheduleSave(){clearTimeout(saveTimer);setSyncStatus('saving',fbConnected?'儲存中...':'本機');saveTimer=setTimeout(saveNow,700);}
 function saveNow(){
-  const data={nodes,rootIds,expandState,mmNodePos,projectName:document.getElementById('project-name').value};
-  try{localStorage.setItem('sysmap_nodes',JSON.stringify(nodes));localStorage.setItem('sysmap_root',JSON.stringify(rootIds));localStorage.setItem('sysmap_expand',JSON.stringify(expandState));localStorage.setItem('sysmap_mmpos',JSON.stringify(mmNodePos));localStorage.setItem('sysmap_proj',data.projectName);}catch(e){}
-  if(fbRef&&fbConnected){setSyncStatus('saving','同步...');fbRef.set(data).then(()=>setSyncStatus('ok','Firebase ✓')).catch(e=>{console.error(e);setSyncStatus('err','失敗');});}
-  else setSyncStatus('ok','本機');
-}
-function loadLocal(){
+  if(!currentProjId)return;
+  const pid=currentProjId;
+  const data={nodes,rootIds,expandState,mmNodePos,projectName:projects[pid]?projects[pid].name:'專案'};
+  // local: per-project key
   try{
-    const n=localStorage.getItem('sysmap_nodes'),r=localStorage.getItem('sysmap_root');
-    if(n&&r){nodes=JSON.parse(n);rootIds=JSON.parse(r);expandState=JSON.parse(localStorage.getItem('sysmap_expand')||'{}');
-      const mp=localStorage.getItem('sysmap_mmpos');if(mp)mmNodePos=JSON.parse(mp);
-      const p=localStorage.getItem('sysmap_proj');if(p)document.getElementById('project-name').value=p;return true;}
-  }catch(e){}return false;
+    localStorage.setItem('sysmap_proj_'+pid,JSON.stringify(data));
+    localStorage.setItem('sysmap_projects',JSON.stringify(projects));
+    localStorage.setItem('sysmap_currentProj',pid);
+  }catch(e){}
+  // firebase: per-project path
+  if(fbRef&&fbConnected){
+    setSyncStatus('saving','同步...');
+    const db=firebase.database();
+    const safe=pid.replace(/[^a-zA-Z0-9_\-]/g,'_');
+    db.ref('sysmap_v2/projects/'+safe).set(data)
+      .then(()=>{
+        db.ref('sysmap_v2/projectList').set(projects);
+        setSyncStatus('ok','Firebase ✓');
+      })
+      .catch(e=>{console.error(e);setSyncStatus('err','失敗');});
+  } else setSyncStatus('ok','本機');
 }
-document.getElementById('project-name').addEventListener('input',scheduleSave);
+// ── Project management functions ──────────────────────────────
+function loadAllProjects(){
+  try{
+    const ps=localStorage.getItem('sysmap_projects');
+    if(ps)projects=JSON.parse(ps);
+    // Migrate old single-project data
+    const oldN=localStorage.getItem('sysmap_nodes');
+    const oldR=localStorage.getItem('sysmap_root');
+    if(oldN&&oldR&&Object.keys(projects).length===0){
+      const pid='proj_'+uid();
+      const oldName=localStorage.getItem('sysmap_proj')||'預設專案';
+      projects[pid]={id:pid,name:oldName,createdAt:Date.now()};
+      const migData={nodes:JSON.parse(oldN),rootIds:JSON.parse(oldR),
+        expandState:JSON.parse(localStorage.getItem('sysmap_expand')||'{}'),
+        mmNodePos:JSON.parse(localStorage.getItem('sysmap_mmpos')||'{}'),
+        projectName:oldName};
+      localStorage.setItem('sysmap_proj_'+pid,JSON.stringify(migData));
+      localStorage.setItem('sysmap_projects',JSON.stringify(projects));
+      // Clean up old keys
+      ['sysmap_nodes','sysmap_root','sysmap_expand','sysmap_mmpos','sysmap_proj'].forEach(k=>localStorage.removeItem(k));
+    }
+  }catch(e){}
+}
+
+function loadProject(pid){
+  if(!pid||!projects[pid])return false;
+  currentProjId=pid;
+  try{
+    const raw=localStorage.getItem('sysmap_proj_'+pid);
+    if(raw){
+      const d=JSON.parse(raw);
+      nodes=d.nodes||{};rootIds=d.rootIds||[];
+      expandState=d.expandState||{};mmNodePos=d.mmNodePos||{};
+    } else {
+      nodes={};rootIds=[];expandState={};mmNodePos={};
+    }
+  }catch(e){nodes={};rootIds=[];expandState={};mmNodePos={};}
+  localStorage.setItem('sysmap_currentProj',pid);
+  document.getElementById('proj-current-name').textContent=projects[pid].name;
+  currentId=null;
+  document.getElementById('feat-detail').style.display='none';
+  document.getElementById('empty-state').style.display='flex';
+  renderTree();renderGantt();renderMindMap();renderProjPanel();
+  return true;
+}
+
+function createProject(name){
+  const inp=document.getElementById('pp-new-inp');
+  const n=(name||inp.value).trim();
+  if(!n){inp.focus();return;}
+  const pid='proj_'+uid();
+  projects[pid]={id:pid,name:n,createdAt:Date.now()};
+  inp.value='';
+  localStorage.setItem('sysmap_projects',JSON.stringify(projects));
+  loadProject(pid);
+  if(!name)toggleProjPanel();
+  showToast('✅ 已建立專案「'+n+'」');
+  scheduleSave();
+}
+
+function renameProject(pid){
+  const n=prompt('專案名稱：',projects[pid]?.name||'');
+  if(!n||!n.trim())return;
+  projects[pid].name=n.trim();
+  if(pid===currentProjId)document.getElementById('proj-current-name').textContent=n.trim();
+  renderProjPanel();scheduleSave();
+}
+
+function deleteProject(pid){
+  if(!confirm('確定刪除專案「'+projects[pid]?.name+'」？此操作無法復原。'))return;
+  localStorage.removeItem('sysmap_proj_'+pid);
+  delete projects[pid];
+  localStorage.setItem('sysmap_projects',JSON.stringify(projects));
+  const remaining=Object.keys(projects);
+  if(remaining.length){loadProject(remaining[remaining.length-1]);}
+  else{projects={};currentProjId=null;nodes={};rootIds=[];renderTree();renderGantt();renderMindMap();}
+  renderProjPanel();showToast('已刪除專案');
+}
+
+function toggleProjPanel(){
+  const panel=document.getElementById('proj-panel');
+  const ov=document.getElementById('proj-overlay');
+  const isOpen=!panel.classList.contains('hidden');
+  panel.classList.toggle('hidden');ov.classList.toggle('hidden');
+  if(!isOpen)renderProjPanel();
+}
+
+function renderProjPanel(){
+  var list=document.getElementById('pp-list');
+  var pids=Object.keys(projects).sort(function(a,b){return (projects[b].createdAt||0)-(projects[a].createdAt||0);});
+  if(!pids.length){list.innerHTML='<div class="pp-empty">尚無專案，請新增</div>';return;}
+  list.innerHTML='';
+  pids.forEach(function(pid){
+    var p=projects[pid];
+    var isActive=pid===currentProjId;
+    var nc=getProjectNodeCount(pid);
+    var initial=(p.name||'?')[0].toUpperCase();
+    var item=document.createElement('div');
+    item.className='pp-item'+(isActive?' active':'');
+    item.innerHTML='<div class="pp-item-icon">'+initial+'</div>'
+      +'<div class="pp-item-info">'
+        +'<div class="pp-item-name">'+escHtml(p.name)+'</div>'
+        +'<div class="pp-item-meta">'+nc+' 個功能節點</div>'
+      +'</div>'
+      +'<div class="pp-item-acts">'
+        +'<button class="pp-act-btn pp-rename" data-pid="'+pid+'" title="重新命名">✏️</button>'
+        +(isActive?'':'<button class="pp-act-btn del pp-delete" data-pid="'+pid+'" title="刪除">🗑</button>')
+      +'</div>';
+    item.querySelector('.pp-rename').addEventListener('click',function(e){e.stopPropagation();renameProject(pid);});
+    var delBtn=item.querySelector('.pp-delete');
+    if(delBtn)delBtn.addEventListener('click',function(e){e.stopPropagation();deleteProject(pid);});
+    item.addEventListener('click',function(){switchProject(pid);});
+    list.appendChild(item);
+  });
+}
+
+function getProjectNodeCount(pid){
+  try{
+    const raw=localStorage.getItem('sysmap_proj_'+pid);
+    if(raw){const d=JSON.parse(raw);return Object.keys(d.nodes||{}).length;}
+  }catch(e){}return 0;
+}
+
+function switchProject(pid){
+  if(pid===currentProjId){toggleProjPanel();return;}
+  saveNow();
+  loadProject(pid);
+  if(fbConnected&&window._attachProjListener)window._attachProjListener(pid);
+  toggleProjPanel();
+}
+
+function escHtml(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 // Toast
 let toastTimer=null;
@@ -1315,8 +1519,24 @@ function showToast(msg,type='ok'){const t=document.getElementById('toast');t.tex
 // INIT
 // ═══════════════════════════════════════════════════════════════
 
-if(!loadLocal())seedDemo();
-renderTree();
+// ── Init multi-project ───────────────────────────────────────
+loadAllProjects();
+const lastPid=localStorage.getItem('sysmap_currentProj');
+const pids=Object.keys(projects);
+if(pids.length&&lastPid&&projects[lastPid]){
+  loadProject(lastPid);
+}else if(pids.length){
+  loadProject(pids[pids.length-1]);
+}else{
+  // First time: create default project with demo data
+  const pid='proj_'+uid();
+  projects[pid]={id:pid,name:'新系統',createdAt:Date.now()};
+  currentProjId=pid;
+  seedDemo();
+  document.getElementById('proj-current-name').textContent='新系統';
+  renderTree();
+  saveNow();
+}
 
 // Canvas resize on window resize
 window.addEventListener('resize',()=>{
@@ -1340,5 +1560,6 @@ if(savedFbCfg){
 // Schedule tab click
 document.getElementById('tab-schedule').addEventListener('click',()=>renderGantt());
 </script>
+
 </body>
 </html>
