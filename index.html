@@ -9,10 +9,10 @@
 // roundRect polyfill for older browsers
 if(!CanvasRenderingContext2D.prototype.roundRect){CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){if(w<2*r)r=w/2;if(h<2*r)r=h/2;this.beginPath();this.moveTo(x+r,y);this.arcTo(x+w,y,x+w,y+h,r);this.arcTo(x+w,y+h,x,y+h,r);this.arcTo(x,y+h,x,y,r);this.arcTo(x,y,x+w,y,r);this.closePath();return this;};}
 </script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
 <style>
 :root{
   --navy:#1a2744;--navy-mid:#253564;--navy-light:#3a4f82;
@@ -515,6 +515,18 @@ let currentProjId=null;   // active project id
 
 let nodes={},rootIds=[],currentId=null,addParentId=null,expandState={};
 let fbRef=null,fbConnected=false,saveTimer=null;
+
+// ── 硬編碼 Firebase 設定（換電腦也自動連接）──────────────────────
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBRGLJA9nbnijZ8sYtyaS7Z6WVi6zXPI6s",
+  authDomain: "sysmap-b2879.firebaseapp.com",
+  databaseURL: "https://sysmap-b2879-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "sysmap-b2879",
+  storageBucket: "sysmap-b2879.firebasestorage.app",
+  messagingSenderId: "342577114084",
+  appId: "1:342577114084:web:520e9975dede447c82f5f1"
+};
+
 
 
 const STATUS=['todo','wip','done'];
@@ -1326,6 +1338,10 @@ function connectFb(){
   localStorage.setItem('sysmap_fb',JSON.stringify(cfg));initFb(cfg);
 }
 function initFb(cfg){
+  if(typeof firebase==='undefined'){
+    // Firebase SDK not loaded yet, retry in 200ms
+    setTimeout(()=>initFb(cfg),200);return;
+  }
   try{
     try{firebase.apps.forEach(a=>a.delete());}catch(e){}
     firebase.initializeApp(cfg);const db=firebase.database();
@@ -1540,19 +1556,28 @@ window.addEventListener('resize',()=>{
 
 // Auto-connect Firebase
 function autoConnectFb(){
-const savedFbCfg=loadFbCfg();
-if(savedFbCfg){
-  document.getElementById('fb-apiKey').value=savedFbCfg.apiKey||'';
-  document.getElementById('fb-authDomain').value=savedFbCfg.authDomain||'';
-  document.getElementById('fb-databaseURL').value=savedFbCfg.databaseURL||'';
-  document.getElementById('fb-projectId').value=savedFbCfg.projectId||'';
-  document.getElementById('fb-storageBucket').value=savedFbCfg.storageBucket||'';
-  document.getElementById('fb-appId').value=savedFbCfg.appId||'';
-  setTimeout(()=>initFb(savedFbCfg),400);
-  document.getElementById('fb-banner').classList.add('hidden');
+  // 優先使用硬編碼設定，直接靜默連接
+  const cfg = FIREBASE_CONFIG.apiKey ? FIREBASE_CONFIG : loadFbCfg();
+  if(cfg && cfg.apiKey){
+    // 預填表單（方便使用者看到設定值）
+    const fill = (id, val) => { const el=document.getElementById(id); if(el) el.value=val||''; };
+    fill('fb-apiKey', cfg.apiKey);
+    fill('fb-authDomain', cfg.authDomain);
+    fill('fb-databaseURL', cfg.databaseURL);
+    fill('fb-projectId', cfg.projectId);
+    fill('fb-storageBucket', cfg.storageBucket);
+    fill('fb-appId', cfg.appId);
+    // 靜默連接，不顯示 banner
+    document.getElementById('fb-banner').classList.add('hidden');
+    setTimeout(()=>initFb(cfg), 300);
+  }
 }
+// Wait for Firebase SDK then auto-connect
+if(typeof firebase!=='undefined'){
+  autoConnectFb();
+}else{
+  window.addEventListener('load',()=>autoConnectFb());
 }
-autoConnectFb();
 
 // Schedule tab click
 document.getElementById('tab-schedule').addEventListener('click',()=>renderGantt());
